@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试虫的一千零一夜 · TestBug</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FFD400'/%3E%3Cpath d='M6 17h5l2-6 4 10 2-6h7' stroke='%231A1A1A' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #ffffff;
+    --card-bg: #edf3f9;
+    --card-border: #dbe5f0;
+    --ink: #333a45;
+    --ink-soft: #5b6470;
+    --ink-faint: #7a828d;
+    --grad-a: #9e1b57;
+    --grad-b: #1f3c88;
+    --os-border: #3b82f6;
+    --os-text: #2563eb;
+    --com-border: #8b3fa5;
+    --com-text: #7c3a9e;
+    --gitlab: #fc6d26;
+    --gitee: #c71d23;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", "Noto Sans CJK SC", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 56px;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 12px 0 44px;
+  }
+
+  .qr {
+    width: 168px;
+    height: 168px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+    flex: none;
+  }
+  .qr img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+  .hero-text { text-align: center; }
+
+  .title-zh {
+    font-size: clamp(30px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #3a3f47;
+  }
+
+  .title-en {
+    margin-top: 6px;
+    font-size: clamp(15px, 2.4vw, 20px);
+    color: var(--ink-soft);
+    letter-spacing: 0.5px;
+  }
+
+  .slogan-zh {
+    margin-top: 26px;
+    font-size: clamp(17px, 2.6vw, 22px);
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  .slogan-en {
+    margin-top: 6px;
+    font-size: clamp(13px, 2vw, 17px);
+    color: var(--ink-faint);
+  }
+
+  /* ===== Cards ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    transition: border-color .2s ease;
+  }
+  .card:hover { border-color: #c3d4e8; }
+
+  .card-title {
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 800;
+    line-height: 1.35;
+    background: linear-gradient(100deg, var(--grad-a) 0%, var(--grad-b) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .tag {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 3px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    background: transparent;
+  }
+  .tag.open { border: 1px solid var(--os-border); color: var(--os-text); }
+  .tag.commercial { border: 1px solid var(--com-border); color: var(--com-text); }
+
+  .card-desc {
+    margin-top: 16px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.85;
+  }
+
+  /* ===== Platform entries ===== */
+  .platforms {
+    margin-top: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 22px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn svg { width: 18px; height: 18px; fill: currentColor; }
+  .btn.gitlab { background: var(--gitlab); }
+  .btn.gitee { background: var(--gitee); }
+
+  .note {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  /* ===== Toast ===== */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%) translateY(12px);
+    background: #2b3138;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 10;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== Breakpoints ===== */
+  @media (min-width: 720px) {
+    .hero {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      text-align: left;
+    }
+    .hero-text { text-align: center; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== Hero ===== -->
+  <header class="hero">
+    <div class="qr">
+      <img src="assets/qrcode.png" alt="项目二维码">
+    </div>
+    <div class="hero-text">
+      <h1 class="title-zh">测试虫的一千零一夜</h1>
+      <p class="title-en">The Thousand and One Nights of TestBug</p>
+      <p class="slogan-zh">测试方案和系统集成，助力生产力进化</p>
+      <p class="slogan-en">Test Solution and System Integration, Evolution of Productivity</p>
+    </div>
+  </header>
+
+  <!-- ===== Direction cards ===== -->
+  <main class="grid">
+    <section class="card">
+      <h2 class="card-title">Time Frequency Analysis</h2>
+      <span class="tag open">Open Source</span>
+      <p class="card-desc">时频分析是信号处理领域的核心技术，它能同时在时间和频率两个维度上描述信号的能量分布，专门解决传统傅里叶变换无法处理的非平稳时变信号分析问题。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Time Series Analysis</h2>
+      <span class="tag open">Open Source</span>
+      <p class="card-desc">时间序列分析是针对按时间先后顺序排列的观测数据集，提取规律、建模预测的统计分析技术，核心是利用数据的时序关联性挖掘背后的动态变化逻辑。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Wavelet Analysis</h2>
+      <span class="tag commercial">Commercial</span>
+      <p class="card-desc">小波分析是信号处理领域的经典时频分析框架，它用有限长、会衰减的“小波基函数”替代傅里叶变换中无限延伸的正弦波，实现了信号在时间和频率维度的双重局部化精准刻画，专门解决非平稳时变信号的分析难题。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Sound and Vibration</h2>
+      <span class="tag commercial">Commercial</span>
+      <p class="card-desc">声振分析是融合声学、振动学与信号处理的交叉工程技术，核心是研究机械结构的振动如何通过介质转化为声波，以及声振信号的传播、特征提取与控制优化，广泛应用于工业故障诊断、产品 NVH 性能优化等场景。</p>
+    </section>
+  </main>
+
+  <!-- ===== Platform entries ===== -->
+  <nav class="platforms">
+    <button class="btn gitlab" data-platform="gitlab" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.6 9.6 20.7 18.6 17.4 9.6H6.6L3.3 18.6.4 9.6a.8.8 0 0 1 .3-.9L12 1.7l11.3 7a.8.8 0 0 1 .3.9z"/></svg>
+      GitLab 仓库
+    </button>
+    <button class="btn gitee" data-platform="gitee" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 2.5 5.8 4 14.2l8 5.8 8-5.8 1.5-8.4L12 2zm0 2.3 6.8 2.8-1 5.5L12 17.9l-5.8-5.3-1-5.5L12 4.3z"/><path d="M7.5 9h9v1.6h-9zM9 12.2h6v1.6H9z"/></svg>
+      Gitee 仓库
+    </button>
+  </nav>
+  <p class="note">将下方源码中的仓库地址替换为你的 GitLab / Gitee 仓库链接即可生效。</p>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // 仓库地址占位：部署前替换为真实链接
+  var REPO_LINKS = {
+    gitlab: "",
+    gitee: ""
+  };
+
+  var toast = document.getElementById("toast");
+  var toastTimer = null;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2200);
+  }
+
+  document.querySelectorAll(".btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-platform");
+      var url = REPO_LINKS[key];
+      if (url) {
+        window.open(url, "_blank", "noopener");
+      } else {
+        showToast("请先在源码 REPO_LINKS 中填入 " + (key === "gitlab" ? "GitLab" : "Gitee") + " 仓库地址");
+      }
+    });
+  });
+</script>
+</body>
+</html>
